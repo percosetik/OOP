@@ -1,20 +1,17 @@
 #include "Ticket.h"
 
-Ticket::Ticket(int id, std::string title, std::string description)
-    : id(id), title(title), description(description), status("Новая") {}
+Ticket::Ticket(int id, std::string title, std::string description, std::string authorName)
+    : id(id), title(title), description(description), status("Новая"), authorName(authorName), assigneeName("Не назначен") {}
 
-int Ticket::getId() const { return id; }
-std::string Ticket::getTitle() const { return title; }
-std::string Ticket::getDescription() const { return description; }
-std::string Ticket::getStatus() const { return status; }
-
-void Ticket::setStatus(const std::string& newStatus) {
-    status = newStatus;
+void Ticket::setAssignee(const std::string& name) {
+    assigneeName = name;
+    status = "В работе";
 }
 
 void Ticket::printInfo() const {
     std::cout << "[Заявка #" << id << "]\n"
+              << "  Автор:    " << authorName << "\n"
               << "  Тема:     " << title << "\n"
-              << "  Описание: " << description << "\n"
-              << "  Статус:   " << status << "\n";
+              << "  Статус:   " << status << "\n"
+              << "  Исполнитель: " << assigneeName << "\n";
 }
