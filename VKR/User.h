@@ -3,18 +3,17 @@
 #include <iostream>
 
 class User {
-private:
+protected: // protected, чтобы наследники имели доступ к id и name
     int id;
     std::string name;
-    std::string email;
 
 public:
-    User(int id, std::string name, std::string email);
+    User(int id, std::string name);
+    virtual ~User() {} // виртуальный деструктор 
 
     int getId() const;
     std::string getName() const;
-    std::string getEmail() const;
 
-    // Сделаем метод виртуальным, чтобы наследник мог его переопределить
-    virtual void printInfo() const;
+    // виртуальная функция. делает класс абстрактным.
+    virtual void printInfo() const = 0; 
 };
