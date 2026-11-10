@@ -2,25 +2,27 @@
 #include <string>
 #include <iostream>
 
+class User;
+class SupportEngineer;
+
 class Ticket {
 private:
     int id;
     std::string title;
-    std::string description;
     std::string status;
-    std::string authorName;
-    std::string assigneeName;
+    
+    User* author;             // кто создал (может быть только Customer)
+    SupportEngineer* assignee; // кто решает (может быть nullptr, если не назначен)
 
 public:
-    Ticket(int id, std::string title, std::string description, std::string authorName);
-
+    Ticket(int id, std::string title, User* author);
+    
     int getId() const;
     std::string getTitle() const;
-    std::string getDescription() const;
     std::string getStatus() const;
-
+    
+    void setAssignee(SupportEngineer* eng);
     void setStatus(const std::string& newStatus);
-    void setAssignee(const std::string& name);
     
     void printInfo() const;
 };
