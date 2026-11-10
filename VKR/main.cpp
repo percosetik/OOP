@@ -1,6 +1,8 @@
 #include <iostream>
 #include <windows.h>
+#include <vector>
 #include "User.h"
+#include "Customer.h"
 #include "SupportEngineer.h"
 #include "Ticket.h"
 
@@ -8,41 +10,36 @@ int main() {
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
 
-    // 1. создаем обычного пользователя (автора заявки)
-    User user(1, "Иван Иванов", "ivanov@company.local");
-    
-    std::cout << "--- Создан пользователь ---\n";
-    user.printInfo();
+    // 1. создаем участников
+    Customer client(1, "Иван Иванов");
+    SupportEngineer engineer(2, "Петр Петров", "Сетевое оборудование");
+
+    // 2. демонстрация полиморфизма
+    // создаем вектор указателей на базовый класс User
+    std::vector<User*> users;
+    users.push_back(&client);   // кладем наследника Customer
+    users.push_back(&engineer); // кладем наследника SupportEngineer
+
+    std::cout << "--- Список участников (Полиморфизм) ---\n";
+    for (User* u : users) {
+        u->printInfo(); // программа сама вызовет нужный метод (Customer или Engineer)
+    }
     std::cout << "\n----------------------------------------\n\n";
 
-    // 2. создаем инженера техподдержки (наследник)
-    SupportEngineer engineer(2, "Петр Петров", "petrov@company.local", "Сетевое оборудование");
-    
-    std::cout << "--- Создан инженер ---\n";
-    engineer.printInfo();
-    std::cout << "\n----------------------------------------\n\n";
-
-    // 3. создаем заявку от имени пользователя
-    // Передаем user.getName() в качестве автора
-    Ticket ticket(101, "Не работает доступ к сетевому диску", 
-                  "При попытке подключения к диску Z возникает ошибка авторизации.",
-                  user.getName());
-    
-    std::cout << "--- Создана новая заявка ---\n";
+    // 3. ассоциативные связи
+    // создаем заявку, передавая указатель на автора (&client)
+    Ticket ticket(101, "Не работает доступ к сетевому диску", &client);
+    std::cout << "--- Создана заявка ---\n";
     ticket.printInfo();
-    std::cout << "\n----------------------------------------\n\n";
 
-    // 4. назначаем инженера на заявку
-    // Связываем объект Ticket с объектом SupportEngineer по имени
-    ticket.setAssignee(engineer.getName());
-    
-    std::cout << "--- Заявка назначена инженеру и взята в работу ---\n";
+    std::cout << "\n--- Назначаем инженера ---\n";
+    // связываем заявку с инженером (передаем указатель &engineer)
+    ticket.setAssignee(&engineer);
     ticket.printInfo();
-    std::cout << "\n----------------------------------------\n\n";
 
-    // 5. демонстрация жизненного цикла (закрываем заявку)
+    // меняем статус
     ticket.setStatus("Решена");
-    std::cout << "--- Статус заявки обновлен ---\n";
+    std::cout << "\n--- Заявка закрыта ---\n";
     ticket.printInfo();
 
     return 0;
